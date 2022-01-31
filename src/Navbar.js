@@ -6,7 +6,6 @@ import { BsFillHouseDoorFill } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
 import { BiLibrary } from "react-icons/bi";
 import { RiAddBoxFill, RiHeartFill } from "react-icons/ri";
-import UseAuth from "./UseAuth";
 import SpotifyWebApi from "spotify-web-api-node";
 
 const spotifyApi = new SpotifyWebApi({
@@ -14,7 +13,11 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 const Playlists = ({ name, uri }) => {
-  return <li className="list-items py-3">{name}</li>;
+  return (
+    <li className="list-items py-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
+      {name}
+    </li>
+  );
 };
 
 const Navbar = ({ code, accessToken }) => {
@@ -73,7 +76,7 @@ const Navbar = ({ code, accessToken }) => {
         <hr className="bg-spotify-200 w-52"></hr>
       </div>
       <ul
-        className="overflow-y-scroll h-full ml-8 mt-5 items-start font-semibold text-sm text-spotify-300
+        className="overflow-y-scroll h-full ml-8 mt-5 pr-3 items-start text-sm text-spotify-300
       scrollbar scrollbar-thumb-spotify-200">
         {playlists.map((item) => {
           return (

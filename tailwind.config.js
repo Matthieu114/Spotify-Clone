@@ -31,7 +31,8 @@ module.exports = {
       },
 
       gridTemplateColumns: {
-        spotify: "repeat(auto-fit,minmax(300px,1fr))"
+        spotify100: "repeat(auto-fit,minmax(310px,1fr))",
+        spotify200: "repeat(auto-fit,minmax(200px,1fr))"
       }
     }
   },

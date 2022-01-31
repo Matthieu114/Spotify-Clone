@@ -18,4 +18,19 @@
   .list-items.active {
     @apply text-spotify-100;
   }
+
+  .playlist-item:hover {
+    @apply bg-spotify-300 bg-opacity-20 ease-in duration-100;
+  }
+
+  .homepage-item:hover {
+    @apply bg-spotify-700 bg-opacity-80 ease-in duration-100;
+  }
+
+  .profile-dropdown-item:hover {
+    @apply bg-spotify-500;
+  }
+  .profile-dropdown-item {
+    @apply p-3 tracking-wider text-sm;
+  }
 }
