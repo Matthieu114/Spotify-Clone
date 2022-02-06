@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { RiShareBoxLine } from "react-icons/ri";
+import { Context } from "./Context";
 
 import SpotifyWebApi from "spotify-web-api-node";
 
@@ -9,21 +10,10 @@ const spotifyApi = new SpotifyWebApi({
   clientId: "af8f13c3293b44e38287e574fd56b9dd"
 });
 
-const Header = ({ code, accessToken }) => {
-  const [user, setUser] = useState({});
-  const [anchor, setAnchor] = useState(null);
+const Header = ({ accessToken }) => {
   const [open, setOpen] = useState(false);
-  // const open = Boolean(anchor);
-
-  const handleClick = (e) => {
-    setAnchor(e.currentTarget);
-    // setOpen(true);
-  };
-
-  const handleClose = (e) => {
-    setAnchor(null);
-    // setOpen(false);
-  };
+  const [user, setUser] = useState({});
+  const { auth } = useContext(Context);
 
   const AUTH_URL =
     "https://accounts.spotify.com/authorize?client_id=af8f13c3293b44e38287e574fd56b9dd&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private";
@@ -57,19 +47,22 @@ const Header = ({ code, accessToken }) => {
           <FaChevronRight />
         </a>
       </div>
-      {!code ? (
+      {!auth ? (
         <div className="">
           <button href="#" className=" header-buttons ">
             SIGN UP
           </button>
           <button
-            onClick={() => (window.location.href = AUTH_URL)}
+            onClick={async () => {
+              window.location.href = AUTH_URL;
+            }}
             className="header-buttons bg-spotify-100 text-spotify-text-600 rounded-full mr-10">
             LOG IN
           </button>
         </div>
       ) : (
         <div className="mr-10 relative">
+          {/* <pre>{auth}</pre> */}
           <button
             className="rounded-full py-1 bg-spotify flex items-center bg-spotify-1300 hover:bg-spotify-700"
             onClick={() => setOpen(!open)}>
@@ -78,7 +71,7 @@ const Header = ({ code, accessToken }) => {
             <HiOutlineChevronDown className="text-xl mr-1 " />
           </button>
           {open && (
-            <ul className="bg-spotify-700 w-48 absolute top-10 rounded-md right-0">
+            <ul className="bg-spotify-700 w-52 absolute top-10 rounded-md right-0">
               <li className="profile-dropdown-item flex items-center">
                 <p className="mr-auto">Account</p>
                 <RiShareBoxLine className="text-spotify-100 text-xl" />

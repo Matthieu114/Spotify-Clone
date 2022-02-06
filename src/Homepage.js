@@ -1,10 +1,10 @@
-import React from "react";
-import Header from "./Header";
+import React, { useContext } from "react";
 import { useEffect, useState } from "react";
-import UseAuth from "./UseAuth";
 import SpotifyWebApi from "spotify-web-api-node";
-
 import { BsPlayCircleFill } from "react-icons/bs";
+import { useNavigate } from "react-router";
+import { Context } from "./Context";
+import Header from "./Header";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "af8f13c3293b44e38287e574fd56b9dd"
@@ -12,12 +12,16 @@ const spotifyApi = new SpotifyWebApi({
 
 const PlaylistItem = ({ item }) => {
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
   return (
     <div
       className="playlist-item flex  bg-opacity-40 bg-gradient-to-r from-spotify-200 to bg-spotify-700 rounded-md items-center box-border relative
       "
       onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}>
+      onMouseLeave={() => setVisible(false)}
+      onClick={() => {
+        navigate(`playlists/${item.id}`);
+      }}>
       <img src={item.img} alt="no image" className="h-24 rounded-l-md" />
       <p className="text-spotify-text-100 ml-3 font-semibold max-w-[45%] overflow-hidden overflow-ellipsis ">
         {item.playlistName}
@@ -31,12 +35,16 @@ const PlaylistItem = ({ item }) => {
 
 const HomepageItems = ({ item }) => {
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
   return (
     <div
       className="homepage-item flex flex-col  bg-opacity-90 bg-spotify-800 rounded-md p-4 box-border relative mb-20
       "
       onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}>
+      onMouseLeave={() => setVisible(false)}
+      onClick={() => {
+        navigate("/playlists");
+      }}>
       <img src={item.img} alt="no image" className="aspect-auto rounded-md" />
       <div className="text-left">
         <p className="text-spotify-text-100 mt-3 font-semibold overflow-ellipsis ">
@@ -56,9 +64,10 @@ const HomepageItems = ({ item }) => {
   );
 };
 
-const Homepage = ({ code, accessToken }) => {
+const Homepage = ({ accessToken }) => {
   const [playlists, setPlaylists] = useState([]);
   const [featured, setFeatured] = useState([]);
+  const { auth } = useContext(Context);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -68,11 +77,13 @@ const Homepage = ({ code, accessToken }) => {
       .then((res) => {
         setPlaylists(
           res.body.items.map((playlist) => {
+            // console.log(playlist);
             return {
               playlistName: playlist.name,
               uri: playlist.uri,
               id: playlist.id,
-              img: playlist.images[0]?.url
+              img: playlist.images[0]?.url,
+              href: playlist.href
             };
           })
         );
@@ -82,7 +93,6 @@ const Homepage = ({ code, accessToken }) => {
       });
 
     spotifyApi.getFeaturedPlaylists("11179334269").then((res) => {
-      console.log(res);
       setFeatured(
         res.body.playlists.items.map((feature) => {
           return {
@@ -97,9 +107,9 @@ const Homepage = ({ code, accessToken }) => {
     });
   }, [accessToken]);
 
-  return code ? (
+  return auth ? (
     <div className="h-screen bg-gradient-to-t from-spotify-1300 to bg-blue-700 overflow-x-hidden overflow-y-scroll relative md:ml-64 z-0">
-      <Header code={code} accessToken={accessToken} />
+      <Header accessToken={accessToken} />
       <section className=" mt-16 p-8 text-spotify-100">
         <h1 className="text-3xl font-semibold mb-8">Good evening</h1>
         <div className="grid grid-cols-spotify100 gap-6 h-60 overflow-clip">
@@ -137,7 +147,7 @@ const Homepage = ({ code, accessToken }) => {
     </div>
   ) : (
     <div className="h-screen bg-gradient-to-t from-spotify-1300 to bg-blue-700 overflow-x-hidden overflow-y-scroll relative md:ml-64">
-      <Header code={code} accessToken={accessToken} />
+      <Header accessToken={accessToken} />
     </div>
   );
 };

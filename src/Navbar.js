@@ -20,7 +20,7 @@ const Playlists = ({ name, uri }) => {
   );
 };
 
-const Navbar = ({ code, accessToken }) => {
+const Navbar = ({ auth, accessToken }) => {
   const [playlists, setPlaylists] = useState([]);
 
   useEffect(() => {
