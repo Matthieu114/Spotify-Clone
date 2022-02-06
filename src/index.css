@@ -37,4 +37,16 @@
   .playlist-about {
     @apply text-spotify-text-200;
   }
+
+  .playlist-table-heading {
+    @apply text-sm font-normal tracking-wider text-spotify-300;
+  }
+
+  td {
+    @apply text-spotify-300 p-3;
+  }
+
+  tr:hover {
+    @apply bg-spotify-700 rounded-md;
+  }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 
 import { FaSpotify } from "react-icons/fa";
@@ -8,6 +8,7 @@ import { BiLibrary } from "react-icons/bi";
 import { RiAddBoxFill, RiHeartFill } from "react-icons/ri";
 import SpotifyWebApi from "spotify-web-api-node";
 import { useNavigate } from "react-router";
+import { Context } from "./Context";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "af8f13c3293b44e38287e574fd56b9dd"
@@ -24,8 +25,9 @@ const Playlists = ({ item }) => {
   );
 };
 
-const Navbar = ({ auth, accessToken }) => {
+const Navbar = ({ accessToken }) => {
   const [playlists, setPlaylists] = useState([]);
+  const { auth } = useContext(Context);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -85,9 +87,10 @@ const Navbar = ({ auth, accessToken }) => {
       <ul
         className="overflow-y-scroll h-full ml-8 mt-5 pr-3 items-start text-sm text-spotify-300
       scrollbar scrollbar-thumb-spotify-200">
-        {playlists.map((item) => {
-          return <Playlists key={item.id} item={item} />;
-        })}
+        {auth &&
+          playlists.map((item) => {
+            return <Playlists key={item.id} item={item} />;
+          })}
       </ul>
       <div className="flex-shrink-0 h-[50px]"></div>
     </div>
