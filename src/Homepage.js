@@ -77,7 +77,6 @@ const Homepage = ({ accessToken }) => {
       .then((res) => {
         setPlaylists(
           res.body.items.map((playlist) => {
-            // console.log(playlist);
             return {
               playlistName: playlist.name,
               uri: playlist.uri,
@@ -114,7 +113,7 @@ const Homepage = ({ accessToken }) => {
         <h1 className="text-3xl font-semibold mb-8">Good evening</h1>
         <div className="grid grid-cols-spotify100 gap-6 h-60 overflow-clip">
           {playlists.map((item) => {
-            return <PlaylistItem item={item} />;
+            return <PlaylistItem item={item} key={item.id} />;
           })}
         </div>
       </section>
@@ -127,7 +126,7 @@ const Homepage = ({ accessToken }) => {
         </h2>
         <div className="grid grid-cols-spotify200 gap-6 h-[340px] overflow-hidden">
           {featured.map((item) => {
-            return <HomepageItems item={item} />;
+            return <HomepageItems item={item} key={item.id} />;
           })}
         </div>
       </section>
@@ -140,7 +139,7 @@ const Homepage = ({ accessToken }) => {
         </h2>
         <div className="grid grid-cols-spotify200 gap-6 h-[360px] overflow-hidden">
           {featured.map((item) => {
-            return <HomepageItems item={item} />;
+            return <HomepageItems item={item} key={item.id} />;
           })}
         </div>
       </section>

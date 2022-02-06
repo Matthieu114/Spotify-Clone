@@ -13,7 +13,7 @@ const spotifyApi = new SpotifyWebApi({
 const Header = ({ accessToken }) => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
-  const { auth } = useContext(Context);
+  const { auth, setAuth } = useContext(Context);
 
   const AUTH_URL =
     "https://accounts.spotify.com/authorize?client_id=af8f13c3293b44e38287e574fd56b9dd&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private";
@@ -40,10 +40,10 @@ const Header = ({ accessToken }) => {
       className=" 
     text-spotify-100 flex h-16 items-center bg-opacity-95 fixed md:w-header w-full z-40">
       <div className="mr-auto mx-10 flex">
-        <a href="#" class="bg-spotify-1200 mr-4 rounded-full p-3">
+        <a href="#" className="bg-spotify-1200 mr-4 rounded-full p-3">
           <FaChevronLeft />
         </a>
-        <a href="#" class="rounded-full p-3 bg-spotify-1200">
+        <a href="#" className="rounded-full p-3 bg-spotify-1200">
           <FaChevronRight />
         </a>
       </div>
@@ -77,7 +77,11 @@ const Header = ({ accessToken }) => {
                 <RiShareBoxLine className="text-spotify-100 text-xl" />
               </li>
               <li className="profile-dropdown-item">Profile</li>
-              <li className="profile-dropdown-item">Log Out</li>
+              <li
+                className="profile-dropdown-item"
+                onClick={() => setAuth(null)}>
+                Log Out
+              </li>
             </ul>
           )}
         </div>

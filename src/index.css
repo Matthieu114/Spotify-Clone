@@ -33,4 +33,8 @@
   .profile-dropdown-item {
     @apply p-3 tracking-wider text-sm;
   }
+
+  .playlist-about {
+    @apply text-spotify-text-200;
+  }
 }

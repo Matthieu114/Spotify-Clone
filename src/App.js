@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext, useMemo } from "react";
 import Homepage from "./Homepage";
 import Navbar from "./Navbar";
+import Playlist from "./Playlist";
 import UseAuth from "./UseAuth";
 import {
   Route,
@@ -25,10 +26,14 @@ function App() {
       <Context.Provider value={providerValue}>
         <Routes>
           <Route
-            path="/playlists/*"
+            path="/playlists/:id"
             element={
               <>
-                <Homepage accessToken={accessToken} />
+                {auth ? (
+                  <Playlist accessToken={accessToken} />
+                ) : (
+                  <Homepage accessToken={accessToken} />
+                )}
                 <Navbar accessToken={accessToken} />
               </>
             }
@@ -43,8 +48,6 @@ function App() {
               </>
             }
           />
-          {/* <Navbar accessToken={accessToken} />
-          <Homepage accessToken={accessToken} /> */}
         </Routes>
       </Context.Provider>
     </div>
