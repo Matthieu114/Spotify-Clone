@@ -53,7 +53,7 @@ const Navbar = ({ accessToken }) => {
   }, [accessToken]);
 
   return (
-    <div className="bg-spotify-1300 md:w-64 text-spotify-100 absolute h-screen top-0 left-0 w-0 overflow-hidden flex flex-col">
+    <div className="bg-spotify-1300 md:w-64 text-spotify-100 fixed h-screen top-0 left-0 w-0 overflow-hidden flex flex-col">
       <div className="ml-8 mt-5 items-start">
         <div className="flex items-center">
           <FaSpotify className="text-5xl " />
@@ -92,7 +92,7 @@ const Navbar = ({ accessToken }) => {
             return <Playlists key={item.id} item={item} />;
           })}
       </ul>
-      <div className="flex-shrink-0 h-[50px]"></div>
+      <div className="flex-shrink-0 h-[150px]"></div>
     </div>
   );
 };

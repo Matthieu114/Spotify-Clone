@@ -20,14 +20,22 @@ module.exports = {
         "spotify-text-300": "#2E77D0",
         "spotify-text-400": "535353",
         "spotify-text-500": "#181818",
-        "spotify-text-600": "#000000"
+        "spotify-text-600": "#000000",
+        "red-1000": "rgb(36, 2, 2)"
       },
 
       width: {
-        header: "calc(100% - 16rem)"
+        header: "calc(100% - 16rem)",
+        table: "calc(100vw - 315px)"
       },
       height: {
-        navbarList: "calc(100vh-10rem)"
+        navbarList: "calc(100vh-7rem)",
+        "playlist-table": "calc(100vh - 16rem)"
+      },
+
+      maxWidth: {
+        table: "calc(100vw - 315px)",
+        "heading-text": "calc(50vw - 310px)"
       },
 
       gridTemplateColumns: {

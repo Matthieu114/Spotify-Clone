@@ -15,7 +15,8 @@ const PlaylistItem = ({ item }) => {
   const navigate = useNavigate();
   return (
     <div
-      className="playlist-item flex  bg-opacity-40 bg-gradient-to-r from-spotify-200 to bg-spotify-700 rounded-md items-center box-border relative
+      className="playlist-item flex  bg-opacity-40 bg-gradient-to-r from-spotify-200 to bg-spotify-700 rounded-md items-center 
+      box-border relative max-h-24
       "
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
@@ -27,7 +28,7 @@ const PlaylistItem = ({ item }) => {
         {item.playlistName}
       </p>
       {visible && (
-        <BsPlayCircleFill className="text-6xl  text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 shadow-lg absolute right-5" />
+        <BsPlayCircleFill className="text-6xl hover:text-green-400  text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 shadow-lg absolute right-5" />
       )}
     </div>
   );
@@ -56,7 +57,7 @@ const HomepageItems = ({ item }) => {
       </div>
       {visible && (
         <BsPlayCircleFill
-          className="text-6xl  text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 shadow-lg 
+          className="text-6xl hover:text-green-400 text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 shadow-lg 
         bottom-28 absolute right-5"
         />
       )}
@@ -108,8 +109,8 @@ const Homepage = ({ accessToken }) => {
 
   return auth ? (
     <div className="h-screen bg-gradient-to-t from-spotify-1300 to bg-blue-700 overflow-x-hidden overflow-y-scroll relative md:ml-64 z-0">
-      <Header accessToken={accessToken} />
-      <section className=" mt-16 p-8 text-spotify-100">
+      <Header accessToken={accessToken} bgColor="bg-blue-900" />
+      <section className=" mt-16 p-8 text-spotify-100" data-homepage-scroll>
         <h1 className="text-3xl font-semibold mb-8">Good evening</h1>
         <div className="grid grid-cols-spotify100 gap-6 h-60 overflow-clip">
           {playlists.map((item) => {
@@ -130,7 +131,7 @@ const Homepage = ({ accessToken }) => {
           })}
         </div>
       </section>
-      <section className=" px-8 text-spotify-100 mb-80">
+      <section className="px-8 text-spotify-100 mb-80">
         <h1 className="text-2xl font-semibold mb-2">
           Based on your recent listening
         </h1>

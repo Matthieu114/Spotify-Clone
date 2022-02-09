@@ -3,6 +3,7 @@ import Homepage from "./Homepage";
 import Navbar from "./Navbar";
 import Playlist from "./Playlist";
 import UseAuth from "./UseAuth";
+import FooterMusicPlayer from "./FooterMusicPlayer";
 import {
   Route,
   Routes,
@@ -35,6 +36,7 @@ function App() {
                   <Homepage accessToken={accessToken} />
                 )}
                 <Navbar accessToken={accessToken} />
+                <FooterMusicPlayer />
               </>
             }
           />
@@ -45,6 +47,7 @@ function App() {
               <>
                 <Homepage accessToken={accessToken} />
                 <Navbar accessToken={accessToken} />
+                <FooterMusicPlayer />
               </>
             }
           />

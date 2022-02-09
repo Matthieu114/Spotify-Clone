@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer components {
+  body {
+    @apply box-border;
+  }
+
   .header-buttons {
     @apply text-sm font-semibold tracking-widest px-10 py-2;
   }
@@ -43,10 +47,14 @@
   }
 
   td {
-    @apply text-spotify-300 p-3;
+    @apply text-spotify-300  py-3 px-4;
   }
 
-  tr:hover {
-    @apply bg-spotify-700 rounded-md;
+  th {
+    @apply px-3 py-1;
+  }
+
+  .playlist-rows:hover {
+    @apply bg-spotify-800;
   }
 }
