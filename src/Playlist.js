@@ -149,52 +149,53 @@ const Playlist = ({ accessToken }) => {
           <RiHeartFill className="text-4xl text-spotify-400" />
           <FiMoreHorizontal className="text-4xl text-spotify-300 hover:text-spotify-100 ease-in duration-100" />
         </div>
-        <div className="box-border">
-          <table className="md:w-table text-spotify-200 border-collapse box-border mx-auto table-auto">
-            <thead className="text-left border-b-2 border-spotify-200 sticky top-16 -z-[999]">
-              <tr
-                className={`  ${
-                  headerVisible && "bg-spotify-800"
-                } rounded-lg w-screen`}>
-                <th className="playlist-table-heading">#</th>
-                <th className="playlist-table-heading">TITLE</th>
-                <th className="playlist-table-heading">ALBUM</th>
-                <th className="playlist-table-heading whitespace-nowrap">
-                  DATE ADDED
-                </th>
-                <th className="playlist-table-heading text-lg text-spotify-100">
-                  <GoClock className="mx-auto" />
-                </th>
-              </tr>
-            </thead>
 
-            <tbody className="text-left sticky -z-[1000]">
-              {playlist?.tracks?.map((item, index) => {
-                return (
-                  <tr key={item.track.id} className="playlist-rows ">
-                    <td className="playlist-table-data ">{index + 1}</td>
-                    <td className="playlist-table-data flex items-center mr-20">
-                      <img src={playlist.img} className="h-10 w-10"></img>
-                      <div className="ml-4">
-                        <p className="text-spotify-100">{item.track.name}</p>
-                        <p className="text-sm">{item.track.artists[0].name}</p>
-                      </div>
-                    </td>
-                    <td className="overflow-hidden">
-                      <p>{item.track.album.name}</p>
-                    </td>
-                    <td className="whitespace-nowrap">
-                      {moment(item.added_at).format("MMM. D, YYYY ")}
-                    </td>
-                    <td className="whitespace-nowrap">
-                      {ChangeMilis(item.track.duration_ms)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <table className="md:w-table text-spotify-200 border-collapse box-border mx-auto">
+          <thead className="text-left border-b-2 border-spotify-200 sticky top-16 z-[10]">
+            <tr
+              className={`  ${
+                headerVisible && "bg-spotify-800"
+              } rounded-lg w-screen`}>
+              <th className="playlist-table-heading priority-1">#</th>
+              <th className="playlist-table-heading  priority-1">TITLE</th>
+              <th className="playlist-table-heading  priority-2">ALBUM</th>
+              <th className="playlist-table-heading whitespace-nowrap  priority-3">
+                DATE ADDED
+              </th>
+              <th className="playlist-table-heading text-lg text-spotify-100  priority-1">
+                <GoClock className="" />
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="text-left sticky z-0">
+            {playlist?.tracks?.map((item, index) => {
+              return (
+                <tr key={item.track.id} className="playlist-rows">
+                  <td className="priority-1">{index + 1}</td>
+                  <td className="flex items-center mr-20  priority-1">
+                    <img src={playlist.img} className="h-10 w-10"></img>
+                    <div className="ml-4">
+                      <p className="text-spotify-100">{item.track.name}</p>
+                      <p className="text-sm">{item.track.artists[0].name}</p>
+                    </div>
+                  </td>
+                  <td className="priority-2">
+                    <p className="max-w-[25vw] overflow-hidden text-ellipsis whitespace-nowrap">
+                      {item.track.album.name}
+                    </p>
+                  </td>
+                  <td className="whitespace-nowrap  priority-3">
+                    {moment(item.added_at).format("MMM. D, YYYY ")}
+                  </td>
+                  <td className="whitespace-nowrap  priority-1">
+                    {ChangeMilis(item.track.duration_ms)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </section>
     </div>
   );

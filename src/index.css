@@ -57,4 +57,11 @@
   .playlist-rows:hover {
     @apply bg-spotify-800;
   }
+
+  .priority-2 {
+    @apply hidden lg:table-cell;
+  }
+  .priority-3 {
+    @apply hidden xl:table-cell;
+  }
 }

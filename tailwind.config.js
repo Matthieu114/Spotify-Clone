@@ -41,6 +41,9 @@ module.exports = {
       gridTemplateColumns: {
         spotify100: "repeat(auto-fit,minmax(310px,1fr))",
         spotify200: "repeat(auto-fit,minmax(200px,1fr))"
+      },
+      screens: {
+        "priority-1": "640px"
       }
     }
   },
