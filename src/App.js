@@ -18,13 +18,23 @@ const code = new URLSearchParams(window.location.search).get("code");
 
 function App() {
   const [auth, setAuth] = useState(code);
+  const [currentTrack, setCurrentTrack] = useState(null);
+
   const providerValue = useMemo(() => ({ auth, setAuth }), [auth, setAuth]);
+  const currentTrackValue = useMemo(
+    () => ({ currentTrack, setCurrentTrack }),
+    [currentTrack, setCurrentTrack]
+  );
 
   const accessToken = UseAuth(auth);
 
   return (
     <div className="App relative h-full">
-      <Context.Provider value={providerValue}>
+      <Context.Provider
+        value={{
+          providerValue: providerValue,
+          currentTrackValue: currentTrackValue
+        }}>
         <Routes>
           <Route
             path="/playlists/:id"
@@ -35,8 +45,8 @@ function App() {
                 ) : (
                   <Homepage accessToken={accessToken} />
                 )}
+                {/* <FooterMusicPlayer accessToken={accessToken} /> */}
                 <Navbar accessToken={accessToken} />
-                <FooterMusicPlayer />
               </>
             }
           />
@@ -47,7 +57,7 @@ function App() {
               <>
                 <Homepage accessToken={accessToken} />
                 <Navbar accessToken={accessToken} />
-                <FooterMusicPlayer />
+                <FooterMusicPlayer accessToken={accessToken} />
               </>
             }
           />

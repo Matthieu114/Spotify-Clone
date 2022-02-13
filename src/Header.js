@@ -14,7 +14,7 @@ const Header = ({ accessToken, bgColor }) => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
   const [navbar, setNavbar] = useState(false);
-  const { auth, setAuth } = useContext(Context);
+  const { providerValue } = useContext(Context);
   const playlistIntersect = document.querySelector("[data-playlist-intersect]");
   const homepageIntersect = document.querySelector("[data-homepage-scroll]");
 
@@ -85,7 +85,7 @@ const Header = ({ accessToken, bgColor }) => {
           <FaChevronRight />
         </a>
       </div>
-      {!auth ? (
+      {!providerValue?.auth ? (
         <div className="">
           <button href="#" className=" header-buttons ">
             SIGN UP
@@ -101,13 +101,13 @@ const Header = ({ accessToken, bgColor }) => {
       ) : (
         <div className="mr-10 relative">
           <button
-            className="rounded-full md:py-1 p-1 bg-spotify flex items-center bg-spotify-1300 hover:bg-spotify-700"
+            className="rounded-full lg:py-1 p-1 bg-spotify flex items-center bg-spotify-1300 hover:bg-spotify-700"
             onClick={() => setOpen(!open)}>
-            <img src={user.avatar} className="rounded-full h-7 md:mr-2"></img>
-            <p className="font-semibold mr-1 hidden md:block">
+            <img src={user.avatar} className="rounded-full h-7 lg:mr-2"></img>
+            <p className="font-semibold mr-1 hidden lg:block">
               {user.username}
             </p>
-            <HiOutlineChevronDown className="text-xl mr-1 hidden md:block" />
+            <HiOutlineChevronDown className="text-xl mr-1 hidden lg:block" />
           </button>
           {open && (
             <ul className="bg-spotify-700 w-52 absolute top-10 rounded-md right-0 z-50">
@@ -118,7 +118,7 @@ const Header = ({ accessToken, bgColor }) => {
               <li className="profile-dropdown-item">Profile</li>
               <li
                 className="profile-dropdown-item"
-                onClick={() => setAuth(null)}>
+                onClick={() => providerValue?.setAuth(null)}>
                 Log Out
               </li>
             </ul>

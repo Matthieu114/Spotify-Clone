@@ -1,14 +1,72 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import Header from "./Header";
+import FooterMusicPlayer from "./FooterMusicPlayer";
 import SpotifyWebApi from "spotify-web-api-node";
 import { useParams } from "react-router";
 import moment from "moment";
 
 import { BsPlayCircleFill } from "react-icons/bs";
 import { RiHeartFill } from "react-icons/ri";
+import { RiHeartLine } from "react-icons/ri";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { GoClock } from "react-icons/go";
+import { BsFillPlayFill } from "react-icons/bs";
+import { Context } from "./Context";
+
+const PlaylistTrack = ({ item, index }) => {
+  const [showPlayButton, setShowPlayButton] = useState(false);
+  const { currentTrackValue } = useContext(Context);
+
+  const ChangeMilis = (ms) => {
+    let minutes = Math.floor(ms / 60000);
+    let seconds = ((ms % 60000) / 1000).toFixed(0);
+    return seconds === 60
+      ? minutes + 1 + ":00"
+      : minutes + " : " + (seconds < 10 ? "0" : "") + seconds + "";
+  };
+
+  return (
+    <tr
+      key={item.track.id}
+      className="playlist-rows"
+      onMouseEnter={() => setShowPlayButton(true)}
+      onMouseLeave={() => setShowPlayButton(false)}
+      onClick={() => {
+        currentTrackValue?.setCurrentTrack(item);
+      }}>
+      <td className="priority-1">
+        {showPlayButton ? (
+          <BsFillPlayFill className="text-xl text-spotify-100 -m-1" />
+        ) : (
+          index + 1
+        )}
+      </td>
+      <td className="flex items-center priority-1">
+        <img src={item.track.album?.images[0].url} className="h-10 w-10"></img>
+        <div className="ml-4">
+          <p className="text-spotify-100">{item.track.name}</p>
+          <p className="text-sm">{item.track.artists[0].name}</p>
+        </div>
+      </td>
+      <td className="priority-2">
+        <p className="max-w-[25vw] overflow-hidden text-ellipsis whitespace-nowrap">
+          {item.track.album.name}
+        </p>
+      </td>
+      <td className="whitespace-nowrap  priority-3">
+        {moment(item.added_at).format("MMM. D, YYYY ")}
+      </td>
+      <td className="priority-1 whitespace-nowrap">
+        {showPlayButton ? (
+          <p>{ChangeMilis(item.track.duration_ms)}</p>
+        ) : (
+          ChangeMilis(item.track.duration_ms)
+        )}
+      </td>
+    </tr>
+  );
+};
 
 const Playlist = ({ accessToken }) => {
   const [playlist, setPlaylist] = useState({});
@@ -28,14 +86,6 @@ const Playlist = ({ accessToken }) => {
     return seconds === 60
       ? minutes + 1 + ":00"
       : minutes + " min " + (seconds < 10 ? "0" : "") + seconds + " sec";
-  };
-
-  const ChangeMilis = (ms) => {
-    let minutes = Math.floor(ms / 60000);
-    let seconds = ((ms % 60000) / 1000).toFixed(0);
-    return seconds === 60
-      ? minutes + 1 + ":00"
-      : minutes + " : " + (seconds < 10 ? "0" : "") + seconds + "";
   };
 
   useEffect(() => {
@@ -104,33 +154,34 @@ const Playlist = ({ accessToken }) => {
   }
 
   return (
-    <div className="relative md:ml-64 z-0 bg-spotify-900 mb-28 box-border">
+    <div className="relative md:ml-64 z-[10] bg-spotify-900 mb-20 box-border">
       <Header accessToken={accessToken} bgColor="bg-red-1000" />
+      <FooterMusicPlayer accessToken={accessToken} />
       {headerText && (
         <div
           className="fixed top-[6px] 
         z-40 text-spotify-100 flex items-center md:left-[420px] left-[150px] ">
           <BsPlayCircleFill className="text-[52px] mr-5 text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 hover:text-green-400 shadow-lg" />
-          <h1 className="font-bold text-2xl whitespace-nowrap overflow-hidden text-ellipsis md:max-w-heading-text max-w-[40vw]">
+          <h1 className="font-bold text-2xl whitespace-nowrap overflow-hidden text-ellipsis md:max-w-heading-text sm:max-w-[40vw] max-w-[10vw]">
             {playlist.name}
           </h1>
         </div>
       )}
       <section
-        className="flex p-10 pt-20 bg-gradient-to-t from-spotify-1300 to bg-red-900 text-spotify-100"
+        className="flex md:flex-row flex-col content-center p-10 pt-20 bg-gradient-to-t from-spotify-1300 to bg-red-900 text-spotify-100"
         data-playlist-intersect>
         <div>
           <img
             src={playlist.img}
             alt="Playlist Image"
-            className="max-h-[250px] min-h-[150px] min-w-[150px]"
+            className="sm:max-h-[250px] sm:min-h-[150px] sm:min-w-[150px] md:h-auto h-[100px]"
           />
         </div>
-        <div className="ml-5 mt-auto">
-          <p className="font-semibold text-sm">
+        <div className="md:ml-5 mt-auto">
+          <p className="font-semibold sm:text-sm  text-xs md:mt-0 mb-2 mt-4">
             {playlist.type?.toUpperCase()}
           </p>
-          <h1 className="font-bold text-5xl">{playlist.name}</h1>
+          <h1 className="font-bold md:text-5xl text-2xl ">{playlist.name}</h1>
           <div className="flex items-center text-sm mt-2">
             <p className=" font-semibold">{playlist.owner}</p>
             <p className=" before:content-['•'] before:px-1 playlist-about">
@@ -150,7 +201,7 @@ const Playlist = ({ accessToken }) => {
           <FiMoreHorizontal className="text-4xl text-spotify-300 hover:text-spotify-100 ease-in duration-100" />
         </div>
 
-        <table className="md:w-table text-spotify-200 border-collapse box-border mx-auto">
+        <table className="md:w-table text-spotify-200 border-collapse box-border w-screen  md:mx-auto">
           <thead className="text-left border-b-2 border-spotify-200 sticky top-16 z-[10]">
             <tr
               className={`  ${
@@ -159,43 +210,24 @@ const Playlist = ({ accessToken }) => {
               <th className="playlist-table-heading priority-1">#</th>
               <th className="playlist-table-heading  priority-1">TITLE</th>
               <th className="playlist-table-heading  priority-2">ALBUM</th>
-              <th className="playlist-table-heading whitespace-nowrap  priority-3">
+              <th className="playlist-table-heading whitespace-nowrap priority-3">
                 DATE ADDED
               </th>
-              <th className="playlist-table-heading text-lg text-spotify-100  priority-1">
-                <GoClock className="" />
+              <th className="playlist-table-heading text-lg priority-1">
+                <GoClock className="ml-5" />
               </th>
             </tr>
           </thead>
 
           <tbody className="text-left sticky z-0">
             {playlist?.tracks?.map((item, index) => {
-              return (
-                <tr key={item.track.id} className="playlist-rows">
-                  <td className="priority-1">{index + 1}</td>
-                  <td className="flex items-center mr-20  priority-1">
-                    <img src={playlist.img} className="h-10 w-10"></img>
-                    <div className="ml-4">
-                      <p className="text-spotify-100">{item.track.name}</p>
-                      <p className="text-sm">{item.track.artists[0].name}</p>
-                    </div>
-                  </td>
-                  <td className="priority-2">
-                    <p className="max-w-[25vw] overflow-hidden text-ellipsis whitespace-nowrap">
-                      {item.track.album.name}
-                    </p>
-                  </td>
-                  <td className="whitespace-nowrap  priority-3">
-                    {moment(item.added_at).format("MMM. D, YYYY ")}
-                  </td>
-                  <td className="whitespace-nowrap  priority-1">
-                    {ChangeMilis(item.track.duration_ms)}
-                  </td>
-                </tr>
-              );
+              return <PlaylistTrack item={item} index={index} key={index} />;
             })}
           </tbody>
         </table>
+
+        {playlist?.tracks?.length < 5 && <div className="h-[60vh]"></div>}
+        {playlist?.tracks?.length < 15 && <div className="h-[20vh]"></div>}
       </section>
     </div>
   );

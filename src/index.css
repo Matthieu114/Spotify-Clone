@@ -24,11 +24,11 @@
   }
 
   .playlist-item:hover {
-    @apply bg-spotify-300 bg-opacity-20 ease-in duration-100;
+    @apply bg-spotify-300 bg-opacity-20 ease-in duration-200;
   }
 
   .homepage-item:hover {
-    @apply bg-spotify-700 bg-opacity-80 ease-in duration-100;
+    @apply bg-spotify-700 bg-opacity-80 ease-in duration-200;
   }
 
   .profile-dropdown-item:hover {
@@ -63,5 +63,13 @@
   }
   .priority-3 {
     @apply hidden xl:table-cell;
+  }
+
+  .play-icons {
+    @apply hover:text-spotify-100 ease-linear duration-100 text-2xl mx-3;
+  }
+
+  .play-pause-button {
+    @apply text-spotify-100 text-4xl hover:scale-110;
   }
 }

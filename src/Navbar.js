@@ -27,7 +27,7 @@ const Playlists = ({ item }) => {
 
 const Navbar = ({ accessToken }) => {
   const [playlists, setPlaylists] = useState([]);
-  const { auth } = useContext(Context);
+  const { providerValue } = useContext(Context);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const Navbar = ({ accessToken }) => {
   }, [accessToken]);
 
   return (
-    <div className="bg-spotify-1300 md:w-64 text-spotify-100 fixed h-screen top-0 left-0 w-0 overflow-hidden flex flex-col">
+    <div className="bg-spotify-1300 md:w-64 text-spotify-100 fixed h-screen top-0 left-0 w-0 overflow-hidden flex flex-col z-[1]">
       <div className="ml-8 mt-5 items-start">
         <div className="flex items-center">
           <FaSpotify className="text-5xl " />
@@ -87,7 +87,7 @@ const Navbar = ({ accessToken }) => {
       <ul
         className="overflow-y-scroll h-full ml-8 mt-5 pr-3 items-start text-sm text-spotify-300
       scrollbar scrollbar-thumb-spotify-200">
-        {auth &&
+        {providerValue?.auth &&
           playlists.map((item) => {
             return <Playlists key={item.id} item={item} />;
           })}

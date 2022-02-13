@@ -68,7 +68,7 @@ const HomepageItems = ({ item }) => {
 const Homepage = ({ accessToken }) => {
   const [playlists, setPlaylists] = useState([]);
   const [featured, setFeatured] = useState([]);
-  const { auth } = useContext(Context);
+  const { providerValue } = useContext(Context);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -107,7 +107,7 @@ const Homepage = ({ accessToken }) => {
     });
   }, [accessToken]);
 
-  return auth ? (
+  return providerValue?.auth && playlists.length !== 0 ? (
     <div className="h-screen bg-gradient-to-t from-spotify-1300 to bg-blue-700 overflow-x-hidden overflow-y-scroll relative md:ml-64 z-0">
       <Header accessToken={accessToken} bgColor="bg-blue-900" />
       <section className=" mt-16 p-8 text-spotify-100" data-homepage-scroll>
