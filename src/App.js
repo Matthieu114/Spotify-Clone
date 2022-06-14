@@ -17,6 +17,7 @@ function App() {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [currentColor, setCurrentColor] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState(undefined);
+  const [currentTrackId, setCurrentTrackId] = useState(undefined);
 
   const nav = useNavigate();
 
@@ -24,6 +25,7 @@ function App() {
   const currentTrackValue = useMemo(() => ({ currentTrack, setCurrentTrack }), [currentTrack, setCurrentTrack]);
   const currentBackgroundColor = useMemo(() => ({ currentColor, setCurrentColor }), [currentColor, setCurrentColor]);
   const currentPlayerValue = useMemo(() => ({ currentPlayer, setCurrentPlayer }), [currentPlayer, setCurrentPlayer]);
+  const currentPlayingTrackValue = useMemo(() => ({ currentTrackId, setCurrentTrackId }), [currentTrackId, setCurrentTrackId]);
 
   const accessToken = UseAuth(auth);
 
@@ -43,7 +45,8 @@ function App() {
           providerValue: providerValue,
           currentTrackValue: currentTrackValue,
           currentBackgroundColor: currentBackgroundColor,
-          currentPlayerValue: currentPlayerValue
+          currentPlayerValue: currentPlayerValue,
+          currentPlayingTrack: currentPlayingTrackValue
         }}>
         <Routes>
           <Route exact path='/' element={auth ? goHome : goLanding} />
