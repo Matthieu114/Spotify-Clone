@@ -100,7 +100,7 @@ const Homepage = ({ accessToken }) => {
 
   useEffect(() => {
     currentBackgroundColor.setCurrentColor('bg-blue-900');
-  }, []);
+  }, [currentBackgroundColor]);
 
   return (
     <div className='h-screen bg-gradient-to-t from-spotify-1300 to bg-blue-700 overflow-x-hidden overflow-y-scroll relative md:ml-64 z-0'>

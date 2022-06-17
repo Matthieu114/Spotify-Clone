@@ -47,10 +47,8 @@ const FooterMusicPlayer = ({ accessToken }) => {
   const initialisePlayer = () => {
     loadScript();
     window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log('SDk initializing');
-
       const player = new window.Spotify.Player({
-        name: '3rd Test',
+        name: 'My spotify project',
         getOAuthToken: (cb) => {
           cb(accessToken);
         },
@@ -85,6 +83,8 @@ const FooterMusicPlayer = ({ accessToken }) => {
   useEffect(() => {
     initialisePlayer();
   }, [accessToken]);
+
+  useEffect(() => {}, []);
 
   if (!accessToken) return null;
   return (

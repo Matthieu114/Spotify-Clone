@@ -33,7 +33,8 @@ export default function UseAuth(code) {
           refreshToken
         })
         .then((res) => {
-          setAccessToken(res.data.accessToken);
+          // setAccessToken(res.data.accessToken);
+
           setExpiresIn(res.data.expiresIn);
         })
         .catch(() => {

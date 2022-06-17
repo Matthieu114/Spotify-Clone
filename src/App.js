@@ -18,6 +18,7 @@ function App() {
   const [currentColor, setCurrentColor] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState(undefined);
   const [currentTrackId, setCurrentTrackId] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const nav = useNavigate();
 
@@ -33,10 +34,11 @@ function App() {
   const goHome = <Navigate to='/home' />;
 
   useEffect(() => {
+    if (accessToken !== undefined) setLoading(false);
     if (!auth) {
       nav('/landing');
     }
-  }, []);
+  }, [accessToken]);
 
   return (
     <div className='App relative h-full'>
@@ -56,7 +58,7 @@ function App() {
               <div>
                 <Navbar accessToken={accessToken} />
                 <Header accessToken={accessToken} bgColor={currentBackgroundColor.currentColor} />
-                {auth && <FooterMusicPlayer accessToken={accessToken} />}
+                {auth && !loading ? <FooterMusicPlayer accessToken={accessToken} /> : ''}
                 <Outlet />
               </div>
             }>

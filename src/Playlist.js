@@ -3,11 +3,10 @@ import { useEffect } from 'react';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { useParams } from 'react-router';
 import moment from 'moment';
-import { BsPlayCircleFill } from 'react-icons/bs';
+import { BsPlayCircleFill, BsPause, BsFillPlayFill } from 'react-icons/bs';
 import { RiHeartFill } from 'react-icons/ri';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { GoClock } from 'react-icons/go';
-import { BsFillPlayFill } from 'react-icons/bs';
 import { Context } from './Context';
 
 const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId }) => {
@@ -23,6 +22,16 @@ const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId }) => {
     await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
       method: 'PUT',
       body: JSON.stringify({ uris: [item.track.uri], position_ms: position }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+  };
+
+  const pauseTrack = async (id) => {
+    await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${id}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
@@ -46,15 +55,31 @@ const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId }) => {
         setActiveId(item.track.id);
       }}>
       <td className='priority-1'>
-        {showPlayButton ? (
+        {!showPlayButton ? (
+          index + 1
+        ) : currentPlayingTrack.currentTrackId.track_id === item.track.id ? (
+          !currentPlayingTrack.currentTrackId.paused ? (
+            <BsPause
+              className='text-xl text-spotify-100 -m-1'
+              onClick={() => {
+                pauseTrack(currentPlayingTrack.currentTrackId.device_id);
+              }}
+            />
+          ) : (
+            <BsFillPlayFill
+              className='text-xl text-spotify-100 -m-1'
+              onClick={() => {
+                playTrack(currentPlayingTrack.currentTrackId.device_id);
+              }}
+            />
+          )
+        ) : (
           <BsFillPlayFill
             className='text-xl text-spotify-100 -m-1'
             onClick={() => {
               playTrack(currentPlayingTrack.currentTrackId.device_id);
             }}
           />
-        ) : (
-          index + 1
         )}
       </td>
       <td className='flex items-center priority-1'>
@@ -160,7 +185,7 @@ const Playlist = ({ accessToken }) => {
   }
 
   return (
-    <div className='relative md:ml-64 bg-spotify-900 mb-20 box-border'>
+    <div className='relative md:ml-64 bg-spotify-900 mb-28 box-border'>
       <div className={`fixed top-[6px] z-30 text-spotify-100 flex items-center md:left-[420px] left-[150px] ${headerText ? 'opacity-100' : 'opacity-0'} ease-linear duration-100`}>
         <BsPlayCircleFill className='text-[52px] mr-5 text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 hover:text-green-400 shadow-lg' />
         <h1 className='font-bold text-2xl whitespace-nowrap overflow-hidden text-ellipsis md:max-w-heading-text sm:max-w-[40vw] max-w-[10vw]'>{playlist.name}</h1>
