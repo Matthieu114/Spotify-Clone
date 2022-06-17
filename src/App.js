@@ -24,7 +24,7 @@ function App() {
   const providerValue = useMemo(() => ({ auth, setAuth }), [auth, setAuth]);
   const currentSelectedTrackValue = useMemo(() => ({ currentTrack, setCurrentTrack }), [currentTrack, setCurrentTrack]);
   const currentBackgroundColor = useMemo(() => ({ currentColor, setCurrentColor }), [currentColor, setCurrentColor]);
-  const currentPlayerValue = useMemo(() => ({ currentPlayer, setCurrentPlayer }), [currentPlayer, setCurrentPlayer]);
+  const currentSDKPlayerValue = useMemo(() => ({ currentPlayer, setCurrentPlayer }), [currentPlayer, setCurrentPlayer]);
   const currentPlayingTrackValue = useMemo(() => ({ currentTrackId, setCurrentTrackId }), [currentTrackId, setCurrentTrackId]);
 
   const accessToken = UseAuth(auth);
@@ -45,7 +45,7 @@ function App() {
           providerValue: providerValue,
           currentSelectedTrackValue: currentSelectedTrackValue,
           currentBackgroundColor: currentBackgroundColor,
-          currentPlayerValue: currentPlayerValue,
+          currentSDKPlayerValue: currentSDKPlayerValue,
           currentPlayingTrack: currentPlayingTrackValue
         }}>
         <Routes>

@@ -10,11 +10,11 @@ import { FaRandom } from 'react-icons/fa';
 import { TiArrowLoop } from 'react-icons/ti';
 
 const FooterMusicPlayer = ({ accessToken }) => {
-  const { providerValue, currentPlayerValue, currentPlayingTrack, currentSelectedTrackValue } = useContext(Context);
+  const { providerValue, currentSDKPlayerValue, currentPlayingTrack, currentSelectedTrackValue } = useContext(Context);
   let track = { paused: true };
 
   const loadScript = () => {
-    if (currentPlayerValue.currentPlayer != null) return;
+    if (currentSDKPlayerValue.currentPlayer != null) return;
     const script = document.createElement('script');
     script.src = 'https://sdk.scdn.co/spotify-player.js';
     script.async = true;
@@ -22,10 +22,8 @@ const FooterMusicPlayer = ({ accessToken }) => {
   };
 
   const playTrack = async (id) => {
-    let position;
+    let position = currentPlayingTrack.currentTrackId.position;
 
-    if (currentSelectedTrackValue?.currentTrack?.track.id != currentPlayingTrack.currentTrackId.track_id) position = 0;
-    else position = currentPlayingTrack.currentTrackId.position;
     await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
       method: 'PUT',
       body: JSON.stringify({ uris: [currentSelectedTrackValue?.currentTrack?.track.uri], position_ms: position }),
@@ -66,7 +64,7 @@ const FooterMusicPlayer = ({ accessToken }) => {
 
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
-        currentPlayerValue.setCurrentPlayer(player);
+        currentSDKPlayerValue.setCurrentPlayer(player);
         currentPlayingTrack.setCurrentTrackId({ ...track, device_id: device_id });
         track = { ...track, device_id: device_id };
       });
