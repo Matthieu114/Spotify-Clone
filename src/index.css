@@ -55,7 +55,11 @@
   }
 
   .playlist-rows:hover {
-    @apply bg-spotify-800;
+    @apply bg-spotify-500;
+  }
+
+  .playlist-rows {
+    @apply rounded-md;
   }
 
   .priority-2 {

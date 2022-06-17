@@ -17,12 +17,12 @@ function App() {
   const [currentTrack, setCurrentTrack] = useState(null);
   const [currentColor, setCurrentColor] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState(undefined);
-  const [currentTrackId, setCurrentTrackId] = useState(undefined);
+  const [currentTrackId, setCurrentTrackId] = useState({});
 
   const nav = useNavigate();
 
   const providerValue = useMemo(() => ({ auth, setAuth }), [auth, setAuth]);
-  const currentTrackValue = useMemo(() => ({ currentTrack, setCurrentTrack }), [currentTrack, setCurrentTrack]);
+  const currentSelectedTrackValue = useMemo(() => ({ currentTrack, setCurrentTrack }), [currentTrack, setCurrentTrack]);
   const currentBackgroundColor = useMemo(() => ({ currentColor, setCurrentColor }), [currentColor, setCurrentColor]);
   const currentPlayerValue = useMemo(() => ({ currentPlayer, setCurrentPlayer }), [currentPlayer, setCurrentPlayer]);
   const currentPlayingTrackValue = useMemo(() => ({ currentTrackId, setCurrentTrackId }), [currentTrackId, setCurrentTrackId]);
@@ -43,7 +43,7 @@ function App() {
       <Context.Provider
         value={{
           providerValue: providerValue,
-          currentTrackValue: currentTrackValue,
+          currentSelectedTrackValue: currentSelectedTrackValue,
           currentBackgroundColor: currentBackgroundColor,
           currentPlayerValue: currentPlayerValue,
           currentPlayingTrack: currentPlayingTrackValue

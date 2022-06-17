@@ -8,13 +8,10 @@ import { MdPauseCircle } from 'react-icons/md';
 import { IoMdSkipBackward, IoMdSkipForward } from 'react-icons/io';
 import { FaRandom } from 'react-icons/fa';
 import { TiArrowLoop } from 'react-icons/ti';
-import axios from 'axios';
 
-const FooterMusicPlayer = ({ accessToken, track }) => {
-  const { currentTrackValue } = useContext(Context);
-  const { providerValue, currentPlayerValue, currentPlayingTrack } = useContext(Context);
-
-  const [playState, setPlayState] = useState(false);
+const FooterMusicPlayer = ({ accessToken }) => {
+  const { providerValue, currentPlayerValue, currentPlayingTrack, currentSelectedTrackValue } = useContext(Context);
+  let track = { paused: true };
 
   const loadScript = () => {
     if (currentPlayerValue.currentPlayer != null) return;
@@ -25,11 +22,13 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
   };
 
   const playTrack = async (id) => {
-    setPlayState(!playState);
+    let position;
 
+    if (currentSelectedTrackValue?.currentTrack?.track.id != currentPlayingTrack.currentTrackId.track_id) position = 0;
+    else position = currentPlayingTrack.currentTrackId.position;
     await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
       method: 'PUT',
-      body: JSON.stringify({ uris: [currentTrackValue?.currentTrack?.track.uri] }),
+      body: JSON.stringify({ uris: [currentSelectedTrackValue?.currentTrack?.track.uri], position_ms: position }),
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
@@ -38,7 +37,6 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
   };
 
   const pauseTrack = async (id) => {
-    setPlayState(false);
     await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${id}`, {
       method: 'PUT',
       headers: {
@@ -69,7 +67,8 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         currentPlayerValue.setCurrentPlayer(player);
-        currentPlayingTrack.setCurrentTrackId(device_id);
+        currentPlayingTrack.setCurrentTrackId({ ...track, device_id: device_id });
+        track = { ...track, device_id: device_id };
       });
 
       player.addListener('not_ready', ({ device_id }) => {
@@ -78,6 +77,7 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
 
       player.addListener('player_state_changed', (state) => {
         console.log(state);
+        currentPlayingTrack.setCurrentTrackId({ ...track, position: state.position, track_id: state.track_window.current_track.id, paused: state.paused });
       });
 
       player.connect();
@@ -91,15 +91,15 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
   if (!accessToken) return null;
   return (
     <div className='w-screen h-24 bg-spotify-800 fixed bottom-0 left-0 z-[10000] text-spotify-100'>
-      {currentTrackValue?.currentTrack != null && providerValue.auth ? (
+      {currentSelectedTrackValue?.currentTrack != null && providerValue.auth ? (
         <div className='flex items-center justify-between relative'>
           <div className='flex items-center m-4'>
             <div>
-              <img src={currentTrackValue?.currentTrack?.track.album.images[2].url} alt='' />
+              <img src={currentSelectedTrackValue?.currentTrack?.track.album.images[2].url} alt='' />
             </div>
             <div className='px-4'>
-              <p>{currentTrackValue?.currentTrack?.track.name}</p>
-              <p className='text-sm text-spotify-300'>{currentTrackValue?.currentTrack?.track.artists[0].name}</p>
+              <p>{currentSelectedTrackValue?.currentTrack?.track.name}</p>
+              <p className='text-sm text-spotify-300'>{currentSelectedTrackValue?.currentTrack?.track.artists[0].name}</p>
             </div>
             <div className='flex items-center text-spotify-300'>
               <RiHeartLine className='play-icons text-  xl' />
@@ -111,18 +111,18 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
             <div className='flex items-center'>
               <FaRandom className=' play-icons' />
               <IoMdSkipBackward className=' play-icons' />
-              {!playState ? (
+              {currentPlayingTrack.currentTrackId.paused ? (
                 <BsPlayCircleFill
                   className='play-icons play-pause-button '
                   onClick={() => {
-                    playTrack(currentPlayingTrack.currentTrackId);
+                    playTrack(currentPlayingTrack.currentTrackId.device_id);
                   }}
                 />
               ) : (
                 <MdPauseCircle
                   className='play-icons play-pause-button '
                   onClick={() => {
-                    pauseTrack(currentPlayingTrack.currentTrackId);
+                    pauseTrack(currentPlayingTrack.currentTrackId.device_id);
                   }}
                 />
               )}
@@ -133,14 +133,6 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
               <input type='range' name='' id='' className=' bg-spotify-300 appearance-none h-[3px] rounded-full' />
             </div>
           </div>
-
-          <div className='flex mr-4'>
-            <h1>logo1</h1>
-            <h1>logo2</h1>
-            <h1>logo3</h1>
-            <h1>logo4</h1>
-            <h1>logo5</h1>
-          </div>
         </div>
       ) : (
         <div className='flex justify-center mt-4'>
@@ -148,11 +140,10 @@ const FooterMusicPlayer = ({ accessToken, track }) => {
             <div className='flex items-center'>
               <FaRandom className=' play-icons' />
               <IoMdSkipBackward className=' play-icons' />
-              {!playState ? <BsPlayCircleFill className=' play-icons play-pause-button ' /> : <MdPauseCircle className='play-icons play-pause-button ' />}
+              <BsPlayCircleFill className=' play-icons play-pause-button ' />
               <IoMdSkipForward className=' play-icons' />
               <TiArrowLoop className=' play-icons' />
             </div>
-            <div>player</div>
           </div>
         </div>
       )}
