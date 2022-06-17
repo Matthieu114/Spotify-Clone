@@ -10,8 +10,9 @@ import { GoClock } from 'react-icons/go';
 import { BsFillPlayFill } from 'react-icons/bs';
 import { Context } from './Context';
 
-const PlaylistTrack = ({ item, index, accessToken }) => {
+const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId }) => {
   const [showPlayButton, setShowPlayButton] = useState(false);
+
   const { currentSelectedTrackValue, currentPlayingTrack } = useContext(Context);
 
   const playTrack = async (id) => {
@@ -38,11 +39,11 @@ const PlaylistTrack = ({ item, index, accessToken }) => {
   return (
     <tr
       key={item.track.id}
-      className='playlist-rows'
+      className={`playlist-rows ${activeId === item.track.id ? 'active-row' : ''}`}
       onMouseEnter={() => setShowPlayButton(true)}
       onMouseLeave={() => setShowPlayButton(false)}
       onClick={() => {
-        // currentSelectedTrackValue?.setCurrentTrack(item);
+        setActiveId(item.track.id);
       }}>
       <td className='priority-1'>
         {showPlayButton ? (
@@ -74,14 +75,11 @@ const PlaylistTrack = ({ item, index, accessToken }) => {
 
 const Playlist = ({ accessToken }) => {
   const [playlist, setPlaylist] = useState({});
+  const [activeId, setActiveId] = useState();
   const [headerVisible, setHeaderVisible] = useState(false);
   const [headerText, setHeaderText] = useState(false);
   const { currentBackgroundColor } = useContext(Context);
   const playlistIntersect = document.querySelector('[data-playlist-intersect]');
-
-  const spotifyApi = new SpotifyWebApi({
-    clientId: 'af8f13c3293b44e38287e574fd56b9dd'
-  });
 
   const { id } = useParams();
 
@@ -92,6 +90,10 @@ const Playlist = ({ accessToken }) => {
   };
 
   useEffect(() => {
+    const spotifyApi = new SpotifyWebApi({
+      clientId: 'af8f13c3293b44e38287e574fd56b9dd'
+    });
+
     if (!accessToken) return;
     let mounted = true;
     spotifyApi.setAccessToken(accessToken);
@@ -123,7 +125,7 @@ const Playlist = ({ accessToken }) => {
 
   useEffect(() => {
     currentBackgroundColor.setCurrentColor('bg-red-1000');
-  }, []);
+  }, [currentBackgroundColor]);
 
   const sectionOptions = {
     rootMargin: '80px 0px 0px 0px'
@@ -200,7 +202,7 @@ const Playlist = ({ accessToken }) => {
 
           <tbody className='text-left sticky z-0'>
             {playlist?.tracks?.map((item, index) => {
-              return <PlaylistTrack item={item} index={index} key={index} accessToken={accessToken} />;
+              return <PlaylistTrack item={item} index={index} key={index} accessToken={accessToken} setActiveId={setActiveId} activeId={activeId} />;
             })}
           </tbody>
         </table>

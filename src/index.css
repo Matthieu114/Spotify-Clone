@@ -55,7 +55,7 @@
   }
 
   .playlist-rows:hover {
-    @apply bg-spotify-500;
+    @apply bg-spotify-700;
   }
 
   .playlist-rows {
@@ -75,5 +75,9 @@
 
   .play-pause-button {
     @apply text-spotify-100 text-4xl hover:scale-110;
+  }
+
+  .active-row {
+    @apply bg-spotify-500;
   }
 }
