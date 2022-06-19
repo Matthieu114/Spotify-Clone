@@ -17,7 +17,7 @@ const spotifyApi = new SpotifyWebApi({
 const Playlists = ({ item }) => {
   const navigate = useNavigate();
   return (
-    <li className='list-items py-2 overflow-hidden overflow-ellipsis whitespace-nowrap' onClick={() => navigate(`/playlists/${item.id}`)}>
+    <li className='list-items pb-[12px] overflow-hidden overflow-ellipsis whitespace-nowrap' onClick={() => navigate(`/playlists/${item.id}`)}>
       {item.name}
     </li>
   );
@@ -50,13 +50,12 @@ const Navbar = ({ accessToken }) => {
       });
   }, [accessToken]);
 
-
   return (
-    <div className='bg-spotify-1300 md:w-64 text-spotify-100 fixed h-screen top-0 left-0 w-0 overflow-hidden flex flex-col z-[1]'>
-      <div className='ml-8 mt-5 items-start'>
+    <div className='bg-spotify-1300 md:w-60 text-spotify-100 fixed h-screen top-0 left-0 w-0 overflow-hidden flex flex-col z-[1]'>
+      <div className='ml-5 mt-7 items-start'>
         <div className='flex items-center'>
-          <FaSpotify className='text-5xl ' />
-          <h1 className='ml-1 text-3xl font-semibold'>Spotify</h1>
+          <FaSpotify className='text-4xl' />
+          <h1 className='ml-1 text-3xl font-medium'>Spotify</h1>
         </div>
         <ul className='mt-8 tracking-wider font-semibold text-sm text-spotify-300 flex-shrink-0'>
           <li className='list-items active flex items-center mb-5' onClick={() => navigate('/')}>
@@ -82,7 +81,7 @@ const Navbar = ({ accessToken }) => {
         <hr className='bg-spotify-200 w-52'></hr>
       </div>
       <ul
-        className='overflow-y-scroll h-full ml-8 mt-5 pr-3 items-start text-sm text-spotify-300
+        className='overflow-y-scroll h-full ml-5 mt-5 pr-3 items-start text-sm text-spotify-300
       scrollbar scrollbar-thumb-spotify-200'>
         {providerValue?.auth &&
           playlists.map((item) => {

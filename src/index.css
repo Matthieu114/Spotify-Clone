@@ -7,6 +7,10 @@
     @apply box-border;
   }
 
+  html {
+    @apply bg-spotify-900;
+  }
+
   .header-buttons {
     @apply text-sm font-semibold tracking-widest px-10 py-2;
   }

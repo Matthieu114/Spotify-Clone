@@ -109,10 +109,10 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
 
   if (!accessToken) return null;
   return (
-    <div className='w-screen h-24 bg-spotify-800 fixed bottom-0 left-0 z-[10000] text-spotify-100'>
+    <div className='w-screen h-[85px]  bg-spotify-800 fixed bottom-0 left-0 z-[10000] text-spotify-100'>
       {currentSelectedTrackValue?.currentTrack != null && providerValue.auth ? (
         <div className='flex items-center justify-between relative'>
-          <div className='flex items-center m-4'>
+          <div className='flex items-center m-2'>
             <div>
               <img src={currentSelectedTrackValue?.currentTrack?.track.album.images[2].url} alt='' />
             </div>
@@ -148,7 +148,7 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
               <IoMdSkipForward className=' play-icons' />
               <TiArrowLoop className=' play-icons' />
             </div>
-            <div className='flex flex-row items-center'>
+            <div className='flex flex-row items-center mt-2'>
               <p className='text-xs mr-2 text-spotify-300'>{formatTime(currentSeekbarValue.seekbarValue)}</p>
               <input
                 type='range'
@@ -161,7 +161,7 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
           </div>
         </div>
       ) : (
-        <div className='flex justify-center mt-4'>
+        <div className='flex justify-center mt-2'>
           <div className='text-center text-spotify-300'>
             <div className='flex items-center'>
               <FaRandom className=' play-icons' />

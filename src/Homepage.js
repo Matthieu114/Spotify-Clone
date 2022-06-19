@@ -103,7 +103,7 @@ const Homepage = ({ accessToken }) => {
   }, [currentBackgroundColor]);
 
   return (
-    <div className='h-screen bg-gradient-to-t from-spotify-1300 to bg-blue-700 overflow-x-hidden overflow-y-scroll relative md:ml-64 z-0'>
+    <div className='h-screen bg-gradient-to-t from-spotify-1300 to bg-blue-700 overflow-x-hidden overflow-y-scroll relative md:ml-60 z-0'>
       <section className=' mt-16 p-8 text-spotify-100' data-homepage-scroll>
         <h1 className='text-3xl font-semibold mb-8'>Good evening</h1>
         <div className='grid grid-cols-spotify100 gap-6 h-60 overflow-clip'>

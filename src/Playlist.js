@@ -64,7 +64,7 @@ const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId, interv
       onClick={() => {
         setActiveId(item.track.id);
       }}>
-      <td className='priority-1'>
+      <td className='priority-1 text-sm w-4'>
         {!showPlayButton ? (
           index + 1
         ) : currentPlayingTrack.currentTrackId.track_id === item.track.id ? (
@@ -99,11 +99,11 @@ const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId, interv
           <p className='text-sm'>{item.track.artists[0].name}</p>
         </div>
       </td>
-      <td className='priority-2'>
+      <td className='priority-2 text-sm'>
         <p className='max-w-[25vw] overflow-hidden text-ellipsis whitespace-nowrap'>{item.track.album.name}</p>
       </td>
-      <td className='whitespace-nowrap  priority-3'>{moment(item.added_at).format('MMM. D, YYYY ')}</td>
-      <td className='priority-1 whitespace-nowrap'>{showPlayButton ? <p>{ChangeMilis(item.track.duration_ms)}</p> : ChangeMilis(item.track.duration_ms)}</td>
+      <td className='whitespace-nowrap  priority-3 text-sm'>{moment(item.added_at).format('MMM. D, YYYY ')}</td>
+      <td className='priority-1 whitespace-nowrap text-sm'>{showPlayButton ? <p>{ChangeMilis(item.track.duration_ms)}</p> : ChangeMilis(item.track.duration_ms)}</td>
     </tr>
   );
 };
@@ -195,7 +195,7 @@ const Playlist = ({ accessToken, interval }) => {
   }
 
   return (
-    <div className='relative md:ml-64 bg-spotify-900 mb-24 box-border'>
+    <div className='relative md:ml-60 bg-spotify-900 mb-24 box-border'>
       <div className={`fixed top-[6px] z-30 text-spotify-100 flex items-center md:left-[420px] left-[150px] ${headerText ? 'opacity-100' : 'opacity-0'} ease-linear duration-100`}>
         <BsPlayCircleFill className='text-[52px] mr-5 text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 hover:text-green-400 shadow-lg' />
         <h1 className='font-bold text-2xl whitespace-nowrap overflow-hidden text-ellipsis md:max-w-heading-text sm:max-w-[40vw] max-w-[10vw]'>{playlist.name}</h1>
