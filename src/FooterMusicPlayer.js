@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Context } from './Context';
 
 import { RiHeartLine } from 'react-icons/ri';
@@ -9,8 +9,9 @@ import { IoMdSkipBackward, IoMdSkipForward } from 'react-icons/io';
 import { FaRandom } from 'react-icons/fa';
 import { TiArrowLoop } from 'react-icons/ti';
 
-const FooterMusicPlayer = ({ accessToken }) => {
-  const { providerValue, currentSDKPlayerValue, currentPlayingTrack, currentSelectedTrackValue } = useContext(Context);
+const FooterMusicPlayer = ({ accessToken, interval }) => {
+  const { providerValue, currentSDKPlayerValue, currentPlayingTrack, currentSelectedTrackValue, currentSeekbarValue } = useContext(Context);
+
   let track = { paused: true };
 
   const loadScript = () => {
@@ -22,6 +23,13 @@ const FooterMusicPlayer = ({ accessToken }) => {
   };
 
   const playTrack = async (id) => {
+    interval.current = setInterval(() => {
+      currentSDKPlayerValue.currentPlayer?.getCurrentState().then((state) => {
+        if (!state) return;
+        console.log('running from footer');
+        currentSeekbarValue.setSeekbarValue(state.position);
+      });
+    }, 1000);
     let position = currentPlayingTrack.currentTrackId.position;
 
     await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
@@ -35,6 +43,7 @@ const FooterMusicPlayer = ({ accessToken }) => {
   };
 
   const pauseTrack = async (id) => {
+    clearInterval(interval.current);
     await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${id}`, {
       method: 'PUT',
       headers: {
@@ -42,6 +51,21 @@ const FooterMusicPlayer = ({ accessToken }) => {
         Authorization: `Bearer ${accessToken}`
       }
     });
+  };
+
+  const formatTime = (time) => {
+    time = time / 1000;
+    let min = Math.floor(time / 60);
+    if (min < 10) {
+      min = `0` + min;
+    }
+
+    let sec = Math.floor(time % 60);
+    if (sec < 10) {
+      sec = '0' + sec;
+    }
+
+    return `${min} : ${sec}`;
   };
 
   const initialisePlayer = () => {
@@ -72,8 +96,7 @@ const FooterMusicPlayer = ({ accessToken }) => {
       });
 
       player.addListener('player_state_changed', (state) => {
-        console.log(state);
-        currentPlayingTrack.setCurrentTrackId({ ...track, position: state.position, track_id: state.track_window.current_track.id, paused: state.paused });
+        currentPlayingTrack.setCurrentTrackId({ ...track, position: state.position, track_id: state.track_window.current_track.id, paused: state.paused, duration: state.duration });
       });
 
       player.connect();
@@ -83,8 +106,6 @@ const FooterMusicPlayer = ({ accessToken }) => {
   useEffect(() => {
     initialisePlayer();
   }, [accessToken]);
-
-  useEffect(() => {}, []);
 
   if (!accessToken) return null;
   return (
@@ -105,7 +126,7 @@ const FooterMusicPlayer = ({ accessToken }) => {
             </div>
           </div>
 
-          <div className='text-center text-spotify-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+          <div className='text-center text-spotify-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center'>
             <div className='flex items-center'>
               <FaRandom className=' play-icons' />
               <IoMdSkipBackward className=' play-icons' />
@@ -127,8 +148,15 @@ const FooterMusicPlayer = ({ accessToken }) => {
               <IoMdSkipForward className=' play-icons' />
               <TiArrowLoop className=' play-icons' />
             </div>
-            <div>
-              <input type='range' name='' id='' className=' bg-spotify-300 appearance-none h-[3px] rounded-full' />
+            <div className='flex flex-row items-center'>
+              <p className='text-xs mr-2 text-spotify-300'>{formatTime(currentSeekbarValue.seekbarValue)}</p>
+              <input
+                type='range'
+                className=' bg-spotify-300 appearance-none h-[4px] rounded-full w-[25vw] min-w-[250px] slider-thumb overflow-hidden'
+                max={currentPlayingTrack.currentTrackId.duration}
+                value={currentSeekbarValue.seekbarValue}
+              />
+              <p className='text-xs ml-2 text-spotify-300'>{formatTime(currentPlayingTrack.currentTrackId.duration)}</p>
             </div>
           </div>
         </div>

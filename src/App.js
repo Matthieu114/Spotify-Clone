@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import Homepage from './Homepage';
 import Navbar from './Navbar';
 import Header from './Header';
@@ -19,6 +19,8 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState(undefined);
   const [currentTrackId, setCurrentTrackId] = useState({});
   const [loading, setLoading] = useState(true);
+  const [seekbarValue, setSeekbarValue] = useState(0);
+  const interval = useRef();
 
   const nav = useNavigate();
 
@@ -27,6 +29,7 @@ function App() {
   const currentBackgroundColor = useMemo(() => ({ currentColor, setCurrentColor }), [currentColor, setCurrentColor]);
   const currentSDKPlayerValue = useMemo(() => ({ currentPlayer, setCurrentPlayer }), [currentPlayer, setCurrentPlayer]);
   const currentPlayingTrackValue = useMemo(() => ({ currentTrackId, setCurrentTrackId }), [currentTrackId, setCurrentTrackId]);
+  const currentSeekbarValue = useMemo(() => ({ seekbarValue, setSeekbarValue }), [seekbarValue, setSeekbarValue]);
 
   const accessToken = UseAuth(auth);
 
@@ -48,7 +51,8 @@ function App() {
           currentSelectedTrackValue: currentSelectedTrackValue,
           currentBackgroundColor: currentBackgroundColor,
           currentSDKPlayerValue: currentSDKPlayerValue,
-          currentPlayingTrack: currentPlayingTrackValue
+          currentPlayingTrack: currentPlayingTrackValue,
+          currentSeekbarValue: currentSeekbarValue
         }}>
         <Routes>
           <Route exact path='/' element={auth ? goHome : goLanding} />
@@ -58,13 +62,13 @@ function App() {
               <div>
                 <Navbar accessToken={accessToken} />
                 <Header accessToken={accessToken} bgColor={currentBackgroundColor.currentColor} />
-                {auth && !loading ? <FooterMusicPlayer accessToken={accessToken} /> : ''}
+                {auth && !loading ? <FooterMusicPlayer accessToken={accessToken} interval={interval} /> : ''}
                 <Outlet />
               </div>
             }>
             <Route path='/landing' element={<LandingPage accessToken={accessToken} />} />
             <Route path='/home' element={<Homepage accessToken={accessToken} />} />
-            <Route path='/playlists/:id' element={<>{auth ? <Playlist accessToken={accessToken} /> : <Homepage accessToken={accessToken} />}</>} />
+            <Route path='/playlists/:id' element={<>{auth ? <Playlist accessToken={accessToken} interval={interval} /> : <Homepage accessToken={accessToken} />}</>} />
           </Route>
         </Routes>
       </Context.Provider>

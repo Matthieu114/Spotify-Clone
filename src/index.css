@@ -81,3 +81,12 @@
     @apply bg-spotify-500;
   }
 }
+
+.slider-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 7px;
+  width: 5px;
+  background: #1db954;
+  cursor: pointer;
+  box-shadow: -400px 0 0 400px #1db954;
+}

@@ -9,14 +9,23 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import { GoClock } from 'react-icons/go';
 import { Context } from './Context';
 
-const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId }) => {
+const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId, interval }) => {
   const [showPlayButton, setShowPlayButton] = useState(false);
 
-  const { currentSelectedTrackValue, currentPlayingTrack } = useContext(Context);
+  const { currentSelectedTrackValue, currentPlayingTrack, currentSeekbarValue, currentSDKPlayerValue } = useContext(Context);
 
   const playTrack = async (id) => {
     currentSelectedTrackValue?.setCurrentTrack(item);
     let position;
+
+    interval.current = setInterval(() => {
+      currentSDKPlayerValue.currentPlayer?.getCurrentState().then((state) => {
+        if (!state) return;
+        console.log('running from playlist');
+        currentSeekbarValue.setSeekbarValue(state.position);
+      });
+    }, 1000);
+
     if (item.track.id != currentPlayingTrack.currentTrackId.track_id) position = 0;
     else position = currentPlayingTrack.currentTrackId.position;
     await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
@@ -30,6 +39,7 @@ const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId }) => {
   };
 
   const pauseTrack = async (id) => {
+    clearInterval(interval.current);
     await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${id}`, {
       method: 'PUT',
       headers: {
@@ -98,7 +108,7 @@ const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId }) => {
   );
 };
 
-const Playlist = ({ accessToken }) => {
+const Playlist = ({ accessToken, interval }) => {
   const [playlist, setPlaylist] = useState({});
   const [activeId, setActiveId] = useState();
   const [headerVisible, setHeaderVisible] = useState(false);
@@ -149,7 +159,7 @@ const Playlist = ({ accessToken }) => {
   }, [accessToken, id]);
 
   useEffect(() => {
-    currentBackgroundColor.setCurrentColor('bg-red-1000');
+    currentBackgroundColor.setCurrentColor('bg-spotify-400');
   }, [currentBackgroundColor]);
 
   const sectionOptions = {
@@ -185,12 +195,12 @@ const Playlist = ({ accessToken }) => {
   }
 
   return (
-    <div className='relative md:ml-64 bg-spotify-900 mb-28 box-border'>
+    <div className='relative md:ml-64 bg-spotify-900 mb-24 box-border'>
       <div className={`fixed top-[6px] z-30 text-spotify-100 flex items-center md:left-[420px] left-[150px] ${headerText ? 'opacity-100' : 'opacity-0'} ease-linear duration-100`}>
         <BsPlayCircleFill className='text-[52px] mr-5 text-spotify-400 bg-spotify-1300 rounded-full hover:scale-105 hover:text-green-400 shadow-lg' />
         <h1 className='font-bold text-2xl whitespace-nowrap overflow-hidden text-ellipsis md:max-w-heading-text sm:max-w-[40vw] max-w-[10vw]'>{playlist.name}</h1>
       </div>
-      <section className='flex md:flex-row flex-col content-center p-10 pt-20 bg-gradient-to-t from-spotify-1300 to bg-red-900 text-spotify-100' data-playlist-intersect>
+      <section className='flex md:flex-row flex-col content-center p-10 pt-20 bg-gradient-to-t from-spotify-1300 to bg-spotify-400 text-spotify-100' data-playlist-intersect>
         <div>
           <img src={playlist.img} alt='Playlist Image' className='sm:max-h-[250px] sm:min-h-[150px] sm:min-w-[150px] md:h-auto h-[100px]' />
         </div>
@@ -227,7 +237,7 @@ const Playlist = ({ accessToken }) => {
 
           <tbody className='text-left sticky z-0'>
             {playlist?.tracks?.map((item, index) => {
-              return <PlaylistTrack item={item} index={index} key={index} accessToken={accessToken} setActiveId={setActiveId} activeId={activeId} />;
+              return <PlaylistTrack item={item} index={index} key={index} accessToken={accessToken} setActiveId={setActiveId} activeId={activeId} interval={interval} />;
             })}
           </tbody>
         </table>
