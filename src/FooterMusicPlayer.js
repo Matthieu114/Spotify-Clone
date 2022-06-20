@@ -26,7 +26,6 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
     interval.current = setInterval(() => {
       currentSDKPlayerValue.currentPlayer?.getCurrentState().then((state) => {
         if (!state) return;
-        console.log('running from footer');
         currentSeekbarValue.setSeekbarValue(state.position);
       });
     }, 1000);
@@ -34,7 +33,7 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
 
     await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
       method: 'PUT',
-      body: JSON.stringify({ uris: [currentSelectedTrackValue?.currentTrack?.track.uri], position_ms: position }),
+      body: JSON.stringify({ uris: [currentSelectedTrackValue?.currentTrack?.uri], position_ms: position }),
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
@@ -50,6 +49,25 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
       }
+    });
+  };
+
+  const playNext = async (id) => {
+    try {
+      await fetch(`https://api.spotify.com/v1/me/player/next?device_id=${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+    currentSDKPlayerValue.currentPlayer?.getCurrentState().then((state) => {
+      if (!state) return;
+      currentSelectedTrackValue.setCurrentTrack(state.track_window.current_track);
     });
   };
 
@@ -114,11 +132,11 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
         <div className='flex items-center justify-between relative'>
           <div className='flex items-center m-2'>
             <div>
-              <img src={currentSelectedTrackValue?.currentTrack?.track.album.images[2].url} alt='' />
+              <img src={currentSelectedTrackValue?.currentTrack?.album.images[2].url} height={64} width={64} alt='' />
             </div>
             <div className='px-4'>
-              <p>{currentSelectedTrackValue?.currentTrack?.track.name}</p>
-              <p className='text-sm text-spotify-300'>{currentSelectedTrackValue?.currentTrack?.track.artists[0].name}</p>
+              <p>{currentSelectedTrackValue?.currentTrack?.name}</p>
+              <p className='text-sm text-spotify-300'>{currentSelectedTrackValue?.currentTrack?.artists[0].name}</p>
             </div>
             <div className='flex items-center text-spotify-300'>
               <RiHeartLine className='play-icons text-  xl' />
@@ -145,7 +163,7 @@ const FooterMusicPlayer = ({ accessToken, interval }) => {
                   }}
                 />
               )}
-              <IoMdSkipForward className=' play-icons' />
+              <IoMdSkipForward className=' play-icons' onClick={() => playNext(currentPlayingTrack.currentTrackId.device_id)} />
               <TiArrowLoop className=' play-icons' />
             </div>
             <div className='flex flex-row items-center mt-2'>

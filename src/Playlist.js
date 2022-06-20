@@ -9,33 +9,36 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import { GoClock } from 'react-icons/go';
 import { Context } from './Context';
 
-const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId, interval }) => {
+const PlaylistTrack = ({ item, index, accessToken, activeId, setActiveId, interval, playlist }) => {
   const [showPlayButton, setShowPlayButton] = useState(false);
 
   const { currentSelectedTrackValue, currentPlayingTrack, currentSeekbarValue, currentSDKPlayerValue } = useContext(Context);
 
   const playTrack = async (id) => {
-    currentSelectedTrackValue?.setCurrentTrack(item);
+    currentSelectedTrackValue?.setCurrentTrack(item.track);
     let position;
 
     interval.current = setInterval(() => {
       currentSDKPlayerValue.currentPlayer?.getCurrentState().then((state) => {
         if (!state) return;
-        console.log('running from playlist');
         currentSeekbarValue.setSeekbarValue(state.position);
       });
     }, 1000);
 
     if (item.track.id != currentPlayingTrack.currentTrackId.track_id) position = 0;
     else position = currentPlayingTrack.currentTrackId.position;
-    await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ uris: [item.track.uri], position_ms: position }),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
+    try {
+      await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ context_uri: playlist.uri, offset: { position: index } }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+    } catch (e) {
+      throw Error(e);
+    }
   };
 
   const pauseTrack = async (id) => {
@@ -147,7 +150,9 @@ const Playlist = ({ accessToken, interval }) => {
             nbOfTracks: res.body.tracks.total,
             tracks: res.body.tracks.items,
             type: res.body.type,
-            duration: MilisToMinutes(res.body.tracks.items.reduce((sum, items) => sum + items.track.duration_ms, 0))
+            duration: MilisToMinutes(res.body.tracks.items.reduce((sum, items) => sum + items.track.duration_ms, 0)),
+            contextUri: res.body.uri,
+            offset: res.body.tracks.offset
           });
         }
       })
@@ -237,7 +242,7 @@ const Playlist = ({ accessToken, interval }) => {
 
           <tbody className='text-left sticky z-0'>
             {playlist?.tracks?.map((item, index) => {
-              return <PlaylistTrack item={item} index={index} key={index} accessToken={accessToken} setActiveId={setActiveId} activeId={activeId} interval={interval} />;
+              return <PlaylistTrack item={item} index={index} key={index} accessToken={accessToken} setActiveId={setActiveId} activeId={activeId} interval={interval} playlist={playlist} />;
             })}
           </tbody>
         </table>
